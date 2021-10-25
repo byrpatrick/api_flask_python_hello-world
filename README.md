@@ -1,12 +1,16 @@
 # Hello World API: Flask Auth0 Sample
 
-You can use this sample project to learn how to secure a simple Flask API server using Auth0.
+This sample uses Auth0 along with [PyJWT](https://github.com/jpadilla/pyjwt) to protect endpoints in a Flask API server.
 
-The `starter` branch offers a working API server that exposes three public endpoints. Each endpoint returns a different type of message: public, protected, and admin.
+The `add-authorization` branch offers a working API server that exposes a public endpoint along with two protected endpoints. Each endpoint returns a different type of message: public, protected, and admin.
 
-The goal is to use Auth0 to only allow requests that contain a valid access token in their authorization header to access the protected and admin data. Additionally, only access tokens that contain a `read:admin-messages` permission should access the admin data, which is referred to as [Role-Based Access Control (RBAC)](https://auth0.com/docs/authorization/rbac/).
+The `GET /api/messages/protected` and `GET /api/messages/admin` endpoints are protected against unauthorized access. Any requests that contain a valid access token in their authorization header can access the protected and admin data.
+
+However, you should require that only access tokens that contain a `read:admin-messages` permission can access the admin data, which is referred to as [Role-Based Access Control (RBAC)](https://auth0.com/docs/authorization/rbac/). Check out the `add-rbac` branch to see authorization and Role-Based Access Control (RBAC) in action using Auth0.
 
 ## Get Started
+
+### Create a virtual environment
 
 Create a virtual environment under the root project directory:
 
@@ -36,17 +40,71 @@ Activate the virtual environment:
 venv\Scripts\activate
 ```
 
-Install the project dependencies:
+### Install the project dependencies
+
+Execute the following command to install the project dependencies:
 
 ```bash
 pip install -r requirements.txt
 ```
 
+### Register a Flask API with Auth0
+
+- Open the [APIs](https://manage.auth0.com/#/apis) section of the Auth0 Dashboard.
+
+- Click on the **Create API** button.
+
+- Provide a **Name** value such as _Hello World API Server_.
+
+- Set its **Identifier** to `https://hello-world.example.com` or any other value of your liking.
+
+- Leave the signing algorithm as `RS256` as it's the best option from a security standpoint.
+
+- Click on the **Create** button.
+
+> View ["Register APIs" document](https://auth0.com/docs/get-started/set-up-apis) for more details.
+
+### Connect Flask with Auth0
+
 Create a `.env` file under the root project directory and populate it with the following content:
 
 ```bash
 CLIENT_ORIGIN_URL=http://localhost:4040
+AUTH0_AUDIENCE=https://hello-world.example.com
+AUTH0_DOMAIN=
 ```
+
+Get the values for `AUTH0_AUDIENCE` and `AUTH0_DOMAIN` in `.env` from your Auth0 API registration page in the Dashboard.
+
+Head back to your Auth0 API page, and **follow these steps to get the Auth0 Audience**:
+
+![Get the Auth0 Audience to configure an API](https://cdn.auth0.com/blog/complete-guide-to-user-authentication/get-the-auth0-audience.png)
+
+1. Click on the **"Settings"** tab.
+
+2. Locate the **"Identifier"** field and copy its value.
+
+3. Paste the "Identifier" value as the value of `AUTH0_AUDIENCE` in `.env`.
+
+Now, **follow these steps to get the Auth0 Domain value**:
+
+![Get the Auth0 Domain to configure an API](https://cdn.auth0.com/blog/complete-guide-to-user-authentication/get-the-auth0-domain.png)
+
+1. Click on the **"Test"** tab.
+2. Locate the section called **"Asking Auth0 for tokens from my application"**.
+3. Click on the **cURL** tab to show a mock `POST` request.
+4. Copy your Auth0 domain, which is _part_ of the `--url` parameter value: `tenant-name.region.auth0.com`.
+5. Paste the Auth0 domain value as the value of `AUTH0_DOMAIN` in `.env`.
+
+**Tips to get the Auth0 Domain**
+
+- The Auth0 Domain is the substring between the protocol, `https://` and the path `/oauth/token`.
+
+- The Auth0 Domain follows this pattern: `tenant-name.region.auth0.com`.
+
+- The `region` subdomain (`au`, `us`, or `eu`) is optional. Some Auth0 Domains don't have it.
+
+### Run the Flask API Server
 
 Run the project in development mode:
 
