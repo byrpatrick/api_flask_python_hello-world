@@ -6,7 +6,7 @@ The `add-authorization` branch offers a working API server that exposes a public
 
 The `GET /api/messages/protected` and `GET /api/messages/admin` endpoints are protected against unauthorized access. Any requests that contain a valid access token in their authorization header can access the protected and admin data.
 
-However, you should require that only access tokens that contain a `read:admin-messages` permission can access the admin data, which is referred to as [Role-Based Access Control (RBAC)](https://auth0.com/docs/authorization/rbac/). Check out the `add-rbac` branch to see authorization and Role-Based Access Control (RBAC) in action using Auth0.
+However, you should require that only access tokens that contain a `read:admin-messages` permission can access the admin data, which is referred to as [Role-Based Access Control (RBAC)](https://auth0.com/docs/authorization/rbac/).
 
 ## Get Started
 
@@ -111,6 +111,22 @@ Run the project in development mode:
 ```bash
 flask run
 ```
+
+## Set Up Role-Based Access Control with Auth0
+
+The `GET /api/messages/admin` endpoint requires the access token to contain the `read:admin-messages` permission. The best way to simulate that client-server secured request is to use any of the compatible Hello World client apps to log in as a user that has that permission.
+
+You can use the Auth0 Dashboard to create an `admin` role and assign it the `read:admin-messages` permission. Then, you can assign the `admin` role to any user that you want to access the `/admin` endpoint.
+
+If you need help doing so, check out the following resources:
+
+- [Create roles](https://auth0.com/docs/authorization/rbac/roles/create-roles)
+
+- [Create permissions](https://auth0.com/docs/get-started/dashboard/add-api-permissions)
+
+- [Add permissions to roles](https://auth0.com/docs/authorization/rbac/roles/add-permissions-to-roles)
+
+- [Assign roles to users](https://auth0.com/docs/users/assign-roles-to-users)
 
 ## API Endpoints
 

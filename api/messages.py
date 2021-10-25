@@ -2,7 +2,7 @@ from flask import (
     Blueprint
 )
 
-from api.authorization import authorization_guard
+from api.authorization import authorization_guard, permissions, admin_messages_permissions
 
 bp_name = 'api-messages'
 bp_url_prefix = '/api/messages'
@@ -26,6 +26,7 @@ def protected():
 
 @bp.route("/admin")
 @authorization_guard
+@permissions([admin_messages_permissions.read])
 def admin():
     return {
         "message": "The API successfully recognized you as an admin."
