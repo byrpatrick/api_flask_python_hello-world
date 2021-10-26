@@ -3,7 +3,7 @@ from http import HTTPStatus
 
 from flask import request, g
 
-from api.json_web_token import JsonWebToken
+from api.jwt_service import validate_jwt
 from api.utils import json_abort
 
 unauthorized_error = {
@@ -48,7 +48,7 @@ def authorization_guard(function):
     @wraps(function)
     def decorator(*args, **kwargs):
         token = get_bearer_token_from_request()
-        validated_token = JsonWebToken(token).validate()
+        validated_token = validate_jwt(token)
 
         g.access_token = validated_token
 
